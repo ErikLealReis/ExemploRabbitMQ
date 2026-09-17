@@ -9,21 +9,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-public class Receptor {
+public class Receptor2 {
 
-  private static final String QUEUE_NAME = "minha-fila";
+  private static final String QUEUE_NAME = "Fila_SD_2";
 
   public static void main(String[] argv) throws Exception {
-    Properties properties = new Properties();
-    try (Reader reader = Files.newBufferedReader(
-        Path.of("config", "rabbitmq.properties"), StandardCharsets.UTF_8)) {
-      properties.load(reader);
-    }
 
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost(properties.getProperty("rabbitmq.host"));
-    factory.setUsername(properties.getProperty("rabbitmq.user"));
-    factory.setPassword(properties.getProperty("rabbitmq.password"));
+    factory.setHost("100.26.187.37");
+    factory.setUsername("admin");
+    factory.setPassword("password");
     factory.setVirtualHost("/");
 
     Connection connection = factory.newConnection();

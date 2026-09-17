@@ -13,31 +13,29 @@ import java.util.Properties;
 
 public class Emissor {
 
-  private static final String QUEUE_NAME = "minha-fila";
+  private static final String QUEUE_NAME = "Fila_SD";
 
   public static void main(String[] argv) throws Exception {
-    Properties properties = new Properties();
-    try (Reader reader = Files.newBufferedReader(
-        Path.of("config", "rabbitmq.properties"), StandardCharsets.UTF_8)) {
-      properties.load(reader);
-    }
 
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost(properties.getProperty("rabbitmq.host"));
-    factory.setUsername(properties.getProperty("rabbitmq.user"));
-    factory.setPassword(properties.getProperty("rabbitmq.password"));
+    factory.setHost("100.26.187.37");
+    factory.setUsername("admin");
+    factory.setPassword("password");
     factory.setVirtualHost("/");
 
     try (Connection connection = factory.newConnection();
          Channel channel = connection.createChannel()) {
       // (queue-name, durable, exclusive, auto-delete, params)
-      channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
-      String message = "Olá!!!";
+      channel.exchangeDeclare("SD_DIRECT", "direct");
+      channel.queueBind("Fila_SD_1", "SD_DIRECT", "A"); //Nome da fila vinculada, Nome do bindig? , Nome da chave
+      channel.queueBind("Fila_SD_2", "SD_DIRECT", "B");
+      channel.queueBind("Fila_SD_3", "SD_DIRECT", "A");
+
+      String message = "Olá Receptores!!!";
 
       // A fila e a mensagem são persistentes.
-      channel.basicPublish("", QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN,
-          message.getBytes(StandardCharsets.UTF_8));
+      channel.basicPublish("SD", "B", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes(StandardCharsets.UTF_8));
       System.out.println(" [x] Mensagem enviada: '" + message + "'");
     }
   }
