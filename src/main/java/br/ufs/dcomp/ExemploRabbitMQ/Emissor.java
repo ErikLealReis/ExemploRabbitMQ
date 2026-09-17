@@ -35,7 +35,7 @@ public class Emissor {
       String message = "Olá Receptores!!!";
 
       // A fila e a mensagem são persistentes.
-      channel.basicPublish("SD", "B", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes(StandardCharsets.UTF_8));
+      channel.basicPublish("SD_DIRECT", "A", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes(StandardCharsets.UTF_8));
       System.out.println(" [x] Mensagem enviada: '" + message + "'");
     }
   }
